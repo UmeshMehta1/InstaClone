@@ -1,6 +1,6 @@
 import DataUriParser from 'datauri/parser.js'
 
-import path, { extname } from 'path'
+import path from 'path'
 
 const parse = new DataUriParser();
 
