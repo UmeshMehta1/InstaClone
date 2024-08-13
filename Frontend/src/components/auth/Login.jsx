@@ -1,7 +1,7 @@
 import React from "react";
 import Form from "./Form";
 import axios from "axios";
-import { Navigate, Outlet, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -17,7 +17,7 @@ const Login = () => {
   };
   return (
     <>
-      <Form type="login" onSubmit={handleLogin} />;{/* <Outlet /> */}
+      <Form type="login" onSubmit={handleLogin} />;
     </>
   );
 };
