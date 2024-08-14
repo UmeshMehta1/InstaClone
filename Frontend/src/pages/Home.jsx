@@ -7,7 +7,10 @@ const Home = () => {
   return (
     <div className="flex">
       <div className="flex-grow">
-        <Feed />
+        {[1, 2, 3, 4, 5].map((item) => {
+          return <Feed />;
+        })}
+
         <Outlet />
       </div>
       <RightSidebar />
