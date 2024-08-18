@@ -4,11 +4,12 @@ import { Dialog, DialogContent, DialogTrigger } from "./ui/dialog";
 import { Bookmark, MessageCircle, MoreHorizontal, Send } from "lucide-react";
 import { GoHeartFill } from "react-icons/go";
 import CommentDialog from "./CommentDialog";
+import { useSelector } from "react-redux";
 
 const Post = () => {
   const [text, setText] = useState("");
   const [open, setOpen] = useState(false);
-
+  const { user } = useSelector((state) => state.auth);
   const onChangeHandler = (e) => {
     const InputVal = e.target.value;
 
@@ -29,6 +30,7 @@ const Post = () => {
           </Avatar>
           <h1>username</h1>
         </div>
+
         <Dialog>
           <DialogTrigger asChild>
             <MoreHorizontal className="cursor-pointer" />

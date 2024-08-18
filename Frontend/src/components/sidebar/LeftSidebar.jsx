@@ -8,29 +8,13 @@ import {
 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useNavigate } from "react-router-dom";
-import React from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
-
-const sidebarItem = [
-  { icon: <Home />, text: "Home" },
-  { icon: <Search />, text: "Search" },
-  { icon: <TrendingUp />, text: "Messages" },
-  { icon: <Heart />, text: "Notification" },
-  { icon: <PlusSquare />, text: "Create" },
-  {
-    icon: (
-      <Avatar className="w-6 h-6">
-        <AvatarImage src="https://github.com/shadcn.png" />
-        <AvatarFallback>CN</AvatarFallback>
-      </Avatar>
-    ),
-    text: "Profile",
-  },
-  { icon: <LogOut />, text: "Logout" },
-];
+import CreatePost from "../CreatePost";
 
 const LeftSidebar = () => {
+  const [open, setOpen] = useState(false);
   const navigate = useNavigate();
 
   const logoutHandler = async () => {
@@ -49,8 +33,30 @@ const LeftSidebar = () => {
   };
 
   const sideBarHandler = (textType) => {
-    if (textType === "Logout") logoutHandler();
+    if (textType === "Logout") {
+      logoutHandler();
+    } else if (textType === "Create") {
+      setOpen(true);
+    }
   };
+
+  const sidebarItem = [
+    { icon: <Home />, text: "Home" },
+    { icon: <Search />, text: "Search" },
+    { icon: <TrendingUp />, text: "Messages" },
+    { icon: <Heart />, text: "Notification" },
+    { icon: <PlusSquare />, text: "Create" },
+    {
+      icon: (
+        <Avatar className="w-6 h-6">
+          <AvatarImage src="https://github.com/shadcn.png" />
+          <AvatarFallback>CN</AvatarFallback>
+        </Avatar>
+      ),
+      text: "Profile",
+    },
+    { icon: <LogOut />, text: "Logout" },
+  ];
 
   return (
     <div className="fixed top-0 z-10 left-0 px-4 border-x-gray-300 w-[16%] h-screen">
@@ -70,6 +76,7 @@ const LeftSidebar = () => {
             );
           })}
         </div>
+        <CreatePost open={open} setOpen={setOpen} />
       </div>
     </div>
   );
