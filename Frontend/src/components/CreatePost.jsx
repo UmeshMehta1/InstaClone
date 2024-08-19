@@ -34,15 +34,13 @@ const CreatePost = ({ open, setOpen }) => {
 
     try {
       setLoading(true);
-      const token = localStorage.getItem("token");
-      console.log("this is form creatpost" + token);
+
       const res = await axios.post(
         "http://localhost:3000/api/v1/post/addpost",
         formData,
         {
           headers: {
             "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${token}`,
           },
           withCredentials: true,
         }
