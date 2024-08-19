@@ -41,6 +41,8 @@ const CreatePost = ({ open, setOpen }) => {
         {
           headers: {
             "Content-Type": "multipart/form-data",
+            Accept: "application/json",
+            Authorization: `${localStorage.getItem("token")}`,
           },
           withCredentials: true,
         }
