@@ -82,7 +82,7 @@ export const Login= async(req,res)=>{
             following: user.following,
         }
     
-        const token =  jwt.sign({userId:user._id}, process.env.SECRET_KEY, {expiresIn:"1d"})
+        const token =  jwt.sign({userId:user._id},"hello", {expiresIn:"1d"})
         
     
         return res.cookie('token',token, {httpOnly:true, sameSite:'strict', maxAge:1*24*60*60*1000}).json({
@@ -99,7 +99,7 @@ export const Login= async(req,res)=>{
 
 export const logout= async (req,res)=>{
  try {
-    return res.cookie('token','',{maxAge:0}).json({
+    return res.cookie('token',"",{maxAge:0}).json({
         message:"Logout successfully",
         success:true
     })
@@ -193,17 +193,17 @@ export const getSuggestedUsers = async (req,res)=>{
 
 export const followOrUnfollow = async (req, res) => {
     try {
-        const followKrneWala = req.id; //me
-        const jiskoFollowKrunga = req.params.id; //they
-        if (followKrneWala === jiskoFollowKrunga) {
+        const followers = req.id; //me
+        const following = req.params.id; //they
+        if (followers === following) {
             return res.status(400).json({
                 message: 'You cannot follow/unfollow yourself',
                 success: false
             });
         }
 
-        const user = await User.findById(followKrneWala);
-        const targetUser = await User.findById(jiskoFollowKrunga);
+        const user = await User.findById(followers);
+        const targetUser = await User.findById(following);
 
         if (!user || !targetUser) {
             return res.status(400).json({
@@ -211,20 +211,20 @@ export const followOrUnfollow = async (req, res) => {
                 success: false
             });
         }
-        // mai check krunga ki follow krna hai ya unfollow
-        const isFollowing = user.following.includes(jiskoFollowKrunga);
+        // mai check garnuparxa ki follow garne ki unfollow
+        const isFollowing = user.following.includes(following);
         if (isFollowing) {
-            // unfollow logic ayega
+            // unfollow logic aauxa
             await Promise.all([
-                User.updateOne({ _id: followKrneWala }, { $pull: { following: jiskoFollowKrunga } }),
-                User.updateOne({ _id: jiskoFollowKrunga }, { $pull: { followers: followKrneWala } }),
+                User.updateOne({ _id: followKrneWala }, { $pull: { following: following } }),
+                User.updateOne({ _id: jiskoFollowKrunga }, { $pull: { followers: followers } }),
             ])
             return res.status(200).json({ message: 'Unfollowed successfully', success: true });
         } else {
-            // follow logic ayega
+            // follow logic aauxa
             await Promise.all([
-                User.updateOne({ _id: followKrneWala }, { $push: { following: jiskoFollowKrunga } }),
-                User.updateOne({ _id: jiskoFollowKrunga }, { $push: { followers: followKrneWala } }),
+                User.updateOne({ _id: followKrneWala }, { $push: { following: following } }),
+                User.updateOne({ _id: jiskoFollowKrunga }, { $push: { followers: followers } }),
             ])
             return res.status(200).json({ message: 'followed successfully', success: true });
         }
