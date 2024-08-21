@@ -43,59 +43,121 @@ export const register= async (req, res)=>{
    
 }
 
-export const Login= async(req,res)=>{
-    try {
-        const {email,password}= req.body;
+// export const Login= async(req,res)=>{
+//     try {
+//         const {email,password}= req.body;
 
-        if(!email || !password){
-            return res.status(401).json({
-                message:"something missing",
-                success:false
-            })
-        }
+//         if(!email || !password){
+//             return res.status(401).json({
+//                 message:"something missing",
+//                 success:false
+//             })
+//         }
 
-        const user = await User.findOne({email})
+//         const user = await User.findOne({email})
 
-        if(!user){
-            return res.status(401).json({
-                message:"email and password is incorrect",
-                success: false
-            })
-        }
+//         if(!user){
+//             return res.status(401).json({
+//                 message:"email and password is incorrect",
+//                 success: false
+//             })
+//         }
 
-        const isMatchpassword = await bcrypt.compare(password, user.password)
+//         const isMatchpassword = await bcrypt.compare(password, user.password)
 
-        if(!isMatchpassword){
-            return res.status(401).json({
-                message:"email and password is incorrect",
-                success: false
-            })
-        }
+//         if(!isMatchpassword){
+//             return res.status(401).json({
+//                 message:"email and password is incorrect",
+//                 success: false
+//             })
+//         }
     
-        const userData={
-            _id:user._id,
+//         const userData={
+//             _id:user._id,
+//             username: user.username,
+//             email: user.email,
+//             profilePicture: user.profilePicture,
+//             bio: user.bio,
+//             followers: user.followers,
+//             following: user.following,
+//         }
+    
+//         const token =  jwt.sign({userId:user._id},process.env.SECRET_KEY, {expiresIn:"1d"})
+        
+    
+//         return res.cookie('token',token, {httpOnly:true, sameSite:'strict', maxAge:1*24*60*60*1000}).json({
+//             message:`Welcome ${user.username}`,
+//             success:true,
+//             user: userData
+//         })
+
+//     } catch (error) {
+//         console.log(error)
+//     }
+   
+// }
+
+export const Login = async (req, res) => {
+    try {
+        const { email, password } = req.body;
+
+        if (!email || !password) {
+            return res.status(401).json({
+                message: "Email or password missing",
+                success: false
+            });
+        }
+
+        const user = await User.findOne({ email });
+
+        if (!user) {
+            return res.status(401).json({
+                message: "Email or password is incorrect",
+                success: false
+            });
+        }
+
+        const isMatchPassword = await bcrypt.compare(password, user.password);
+
+        if (!isMatchPassword) {
+            return res.status(401).json({
+                message: "Email or password is incorrect",
+                success: false
+            });
+        }
+
+        const userData = {
+            _id: user._id,
             username: user.username,
             email: user.email,
             profilePicture: user.profilePicture,
             bio: user.bio,
             followers: user.followers,
             following: user.following,
-        }
-    
-        const token =  jwt.sign({userId:user._id},"hello", {expiresIn:"1d"})
-        
-    
-        return res.cookie('token',token, {httpOnly:true, sameSite:'strict', maxAge:1*24*60*60*1000}).json({
-            message:`Welcome ${user.username}`,
-            success:true,
+        };
+
+        const token = jwt.sign({ userId: user._id }, process.env.SECRET_KEY, { expiresIn: "1d" });
+        console.log("login token",token)
+
+        // Setting the cookie
+        return res.cookie('token', token, {
+            httpOnly: true,
+            sameSite: 'strict',
+            maxAge: 24 * 60 * 60 * 1000 // 1 day
+        }).json({
+            message: `Welcome ${user.username}`,
+            success: true,
             user: userData
-        })
+        });
 
     } catch (error) {
-        console.log(error)
+        console.error(error);
+        return res.status(500).json({
+            message: "An error occurred",
+            success: false
+        });
     }
-   
-}
+};
 
 export const logout= async (req,res)=>{
  try {
