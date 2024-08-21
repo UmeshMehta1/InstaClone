@@ -7,13 +7,18 @@ import { Loader2 } from "lucide-react";
 import { Button } from "./ui/button";
 import toast from "react-hot-toast";
 import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
 
 const CreatePost = ({ open, setOpen }) => {
+  const dispatch = useDispatch();
+
   const imageRef = useRef();
   const [caption, setCaption] = useState("");
   const [file, setFile] = useState(null);
   const [imagePreview, setImagePreview] = useState("");
   const [loading, setLoading] = useState(false);
+
+  const { posts } = useSelector((state) => state.post);
 
   const fileChangeHandler = async (e) => {
     const file = e.target.files?.[0];
@@ -42,18 +47,15 @@ const CreatePost = ({ open, setOpen }) => {
           headers: {
             "Content-Type": "multipart/form-data",
             Accept: "application/json",
-            Authorization: `${localStorage.getItem("token")}`,
           },
           withCredentials: true,
         }
       );
 
       if (res.data.success) {
+        // dispatch(setPosts([res.data.post, ...posts]));
         toast.success(res.data.message);
-        setCaption(""); // Clear the caption
-        setFile(null); // Clear the file
-        setImagePreview(""); // Clear the image preview
-        setOpen(false); // Close the dialog
+        setOpen(false);
       }
     } catch (error) {
       const errorMsg = error?.response?.data?.message || "An error occurred";

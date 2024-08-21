@@ -9,10 +9,7 @@ const Home = () => {
   return (
     <div className="flex">
       <div className="flex-grow">
-        {[1, 2, 3, 4, 5].map((item) => {
-          return <Feed />;
-        })}
-
+        <Feed />
         <Outlet />
       </div>
       <RightSidebar />

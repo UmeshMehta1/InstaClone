@@ -6,7 +6,8 @@ import { GoHeartFill } from "react-icons/go";
 import CommentDialog from "./CommentDialog";
 import { useSelector } from "react-redux";
 
-const Post = () => {
+const Post = ({ post }) => {
+  // console.log(post);
   const [text, setText] = useState("");
   const [open, setOpen] = useState(false);
   const { user } = useSelector((state) => state.auth);
@@ -28,7 +29,7 @@ const Post = () => {
             <AvatarImage src="" alt="postImg" />
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
-          <h1>username</h1>
+          <h1>{post.author.username}</h1>
         </div>
 
         <Dialog>
@@ -50,15 +51,17 @@ const Post = () => {
               Add to favorites
             </span>
 
-            <span variant="ghost" className="cursor-pointer w-fit ">
-              Delete
-            </span>
+            {user && user._id === post?.author._id && (
+              <span variant="ghost" className="cursor-pointer w-fit ">
+                Delete
+              </span>
+            )}
           </DialogContent>
         </Dialog>
       </div>
       <img
         className="object-cover w-full rounded-sm aspect-square"
-        src="https://images.unsplash.com/photo-1722603037481-6f6f7bf852fa?q=80&w=871&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+        src={post.image}
         alt="postImg"
       />
       <div className="flex justify-between my-3">
@@ -74,8 +77,8 @@ const Post = () => {
       </div>
       <span className="block mb-2 font-medium">2k likes</span>
       <p>
-        <span className="mr-2 font-medium">username</span>
-        caption
+        <span className="mr-2 font-medium">{post.author.username}</span>
+        {post.caption}
       </p>
       <span onClick={() => setOpen(true)}>vieew all 10 comments</span>
 
